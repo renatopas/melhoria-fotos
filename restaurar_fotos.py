@@ -65,7 +65,11 @@ def parser() -> argparse.ArgumentParser:
     )
 
     collect = sub.add_parser("collect", help="Consulta um job e salva resultados prontos")
-    collect.add_argument("job", help="Nome do job, por exemplo batches/123, ou arquivo .json")
+    collect.add_argument(
+        "job",
+        nargs="?",
+        help="Nome do job ou arquivo .json; se omitido, usa o pendente mais recente",
+    )
     return result
 
 
@@ -93,7 +97,9 @@ def discover(input_dir: Path) -> list[Path]:
 
 
 def select_images(args: argparse.Namespace) -> list[Path]:
-    images = discover(args.input_dir)
+    discovered = discover(args.input_dir)
+    images = [path for path in discovered if not (args.output_dir / path.name).exists()]
+    args.skipped_existing = len(discovered) - len(images)
     if args.all:
         return images
     if args.limit < 1 or args.limit > MAX_TEST_IMAGES:
@@ -107,6 +113,7 @@ def describe_plan(images: list[Path], args: argparse.Namespace) -> None:
     print(f"Entrada: {args.input_dir}")
     print(f"Saída:  {args.output_dir}")
     print(f"Modelo:  {model}")
+    print(f"Já existentes no destino: {args.skipped_existing}")
     print(f"Imagens: {len(images)} ({total / 1024 / 1024:.2f} MiB antes do base64)")
     for path in images:
         print(f"  - {path.name}")
@@ -185,12 +192,37 @@ def safe_job_name(name: str) -> str:
     return re.sub(r"[^A-Za-z0-9_.-]+", "_", name)
 
 
-def load_record(job_arg: str) -> tuple[Path, dict]:
+def read_record(path: Path) -> dict:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SystemExit(f"Registro de job inválido: {path}: {exc}") from exc
+
+
+def load_record(job_arg: str | None) -> tuple[Path, dict]:
+    if job_arg is None:
+        terminal_states = {
+            "JOB_STATE_FAILED",
+            "JOB_STATE_CANCELLED",
+            "JOB_STATE_EXPIRED",
+        }
+        pending: list[tuple[float, Path, dict]] = []
+        for path in JOBS_DIR.glob("*.json") if JOBS_DIR.is_dir() else []:
+            record = read_record(path)
+            if record.get("collected_at") or record.get("last_state") in terminal_states:
+                continue
+            pending.append((path.stat().st_mtime, path, record))
+        if not pending:
+            raise SystemExit("Nenhum job pendente encontrado em .batch_jobs.")
+        _, path, record = max(pending, key=lambda item: item[0])
+        print(f"Job omitido; usando o pendente mais recente: {record['job']}")
+        return path, record
+
     supplied = Path(job_arg)
     candidates = [supplied, JOBS_DIR / f"{safe_job_name(job_arg)}.json"]
     for path in candidates:
         if path.is_file():
-            return path, json.loads(path.read_text(encoding="utf-8"))
+            return path, read_record(path)
     raise SystemExit(f"Registro do job não encontrado para: {job_arg}")
 
 
@@ -209,11 +241,14 @@ def save_image(data: bytes, destination: Path) -> None:
             image.save(destination, format="PNG")
 
 
-def collect_job(job_arg: str) -> None:
+def collect_job(job_arg: str | None) -> None:
     record_path, record = load_record(job_arg)
     client = api_client()
     job = client.batches.get(name=record["job"])
     state = job.state.name
+    record["last_state"] = state
+    record["checked_at"] = datetime.now(timezone.utc).isoformat()
+    record_path.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Job: {record['job']}")
     print(f"Estado: {state}")
     if state != "JOB_STATE_SUCCEEDED":
@@ -257,6 +292,11 @@ def main() -> None:
         return
     images = select_images(args)
     if not images:
+        if args.skipped_existing:
+            raise SystemExit(
+                f"Nenhuma imagem pendente: {args.skipped_existing} arquivo(s) "
+                "já existem no destino."
+            )
         raise SystemExit("Nenhuma imagem compatível encontrada.")
     describe_plan(images, args)
     if args.command == "plan":

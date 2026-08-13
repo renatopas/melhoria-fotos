@@ -31,6 +31,12 @@ O comando informa o nome do job. Consulte e baixe o resultado posteriormente:
 python3 restaurar_fotos.py collect batches/ID_DO_JOB
 ```
 
-Os resultados são gravados em `fotos/melhorada/`, com os nomes originais. Arquivos existentes nunca são sobrescritos.
+Se o ID for omitido, o registro pendente mais recente em `.batch_jobs/` será usado:
+
+```bash
+python3 restaurar_fotos.py collect
+```
+
+Os resultados são gravados em `fotos/melhorada/`, com os nomes originais. Fotos cujo nome já exista no destino são removidas da seleção antes da aplicação de `--limit`; portanto, não são reenviadas nem contam no limite. Arquivos existentes nunca são sobrescritos.
 
 O processamento completo exige `--all`, `--confirm-paid` e a confirmação adicional mostrada pela ajuda do programa. Não o execute sem autorização explícita.
