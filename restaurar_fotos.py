@@ -20,7 +20,6 @@ DEFAULT_INPUT = ROOT / "fotos" / "melhorar"
 DEFAULT_OUTPUT = ROOT / "fotos" / "melhorada"
 JOBS_DIR = ROOT / ".batch_jobs"
 DEFAULT_MODEL = "gemini-3.1-flash-lite-image"
-MAX_TEST_IMAGES = 5
 MAX_INLINE_BYTES = 18 * 1024 * 1024  # margem abaixo do limite oficial de 20 MB
 SUPPORTED_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp"}
 
@@ -75,7 +74,7 @@ def parser() -> argparse.ArgumentParser:
 
 def add_selection_args(command: argparse.ArgumentParser) -> None:
     group = command.add_mutually_exclusive_group()
-    group.add_argument("--limit", type=int, default=1, help="Quantidade (1 a 5; padrão: 1)")
+    group.add_argument("--limit", type=int, default=1, help="Quantidade positiva (padrão: 1)")
     group.add_argument("--all", action="store_true", help="Seleciona todas as fotos")
 
 
@@ -102,8 +101,8 @@ def select_images(args: argparse.Namespace) -> list[Path]:
     args.skipped_existing = len(discovered) - len(images)
     if args.all:
         return images
-    if args.limit < 1 or args.limit > MAX_TEST_IMAGES:
-        raise SystemExit(f"--limit deve estar entre 1 e {MAX_TEST_IMAGES}")
+    if args.limit < 1:
+        raise SystemExit("--limit deve ser um inteiro positivo")
     return images[: args.limit]
 
 
@@ -126,8 +125,6 @@ def require_paid_confirmation(args: argparse.Namespace, images: list[Path]) -> N
         raise SystemExit(
             'Envio total cancelado: use --confirm-all "PROCESSAR_TODAS_AS_FOTOS".'
         )
-    if not args.all and len(images) > MAX_TEST_IMAGES:
-        raise SystemExit(f"Um teste não pode exceder {MAX_TEST_IMAGES} imagens.")
 
 
 def api_client():

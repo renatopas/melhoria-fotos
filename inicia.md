@@ -28,7 +28,7 @@ O modelo deve ser utilizado com parcimônia pois tem custo.
 
 Utilize o modo "batch", que é duas vezes mais barato.
 
-Fazer testes com poucas imagens. No máximo 5 e sempre solicitando confirmação.
+Fazer o teste inicial com poucas imagens e sempre solicitar confirmação. Depois, permitir processamento gradual em lotes de tamanho escolhido pelo usuário.
 
 Para testes do script, por exemplo, uma imagem é suficiente
 

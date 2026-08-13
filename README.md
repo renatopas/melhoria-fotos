@@ -25,6 +25,14 @@ Depois de obter autorização para o teste pago, envie uma imagem:
 python3 restaurar_fotos.py submit --limit 1 --confirm-paid
 ```
 
+Para trabalhar em etapas, informe qualquer quantidade positiva. Por exemplo:
+
+```bash
+python3 restaurar_fotos.py submit --limit 20 --confirm-paid
+```
+
+O limite seleciona somente fotos ainda ausentes no destino. O script pode solicitar que o lote seja reduzido caso as imagens ultrapassem juntas o limite técnico de 18 MiB após a codificação.
+
 O comando informa o nome do job. Consulte e baixe o resultado posteriormente:
 
 ```bash
