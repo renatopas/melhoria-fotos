@@ -41,13 +41,15 @@ Garantir que as fotos sejam apenas melhoradas, com colorização e redução de 
 Segue sugestão de prompt:
 
 ```
-Colorize this entire black-and-white school composite and apply light photographic restoration.
+Professionally restore and fully colorize this scanned school composite.
 
-The source image is authoritative. Keep all visible content and geometry unchanged: the same people, faces, expressions, hair, clothing, markings, text, layout, borders, and background. Do not add, remove, replace, redesign, complete, or reinterpret anything. Do not reconstruct missing or unclear details; leave them soft or damaged as in the source.
+Substantially improve photographic quality: remove xerox and scanning noise, dust, stains and grain; correct fading, exposure and contrast; reduce minor blur; and recover natural facial and clothing detail where that detail is supported by visible evidence in the source. Produce clear, realistic portraits rather than merely tinting the scan. Use natural, historically plausible color throughout every portrait.
 
-The only permitted changes are realistic, historically plausible color, gentle noise and stain reduction, and modest correction of exposure and contrast. Apply color throughout every portrait, but change color only—not shapes, edges, textures, or objects. Preserve all readable text exactly and leave unreadable marks unreadable.
+Preserve the source exactly as to identity and structure. Keep each face, expression, hairstyle, garment, printed marking, portrait boundary, text and page layout unchanged. Restoration may clarify existing features, but must not redesign shapes, invent missing detail or add content. Preserve readable text and existing clothing graphics. Keep genuinely uncertain areas soft.
 
-Return one image with exactly the same composition and content as the source.
+Treat very faint ghost images or show-through outside the bordered portrait cells as paper/scanning artifacts; remove them rather than developing them into people or objects.
+
+Return one restored image with the same composition.
 
 ```
 
