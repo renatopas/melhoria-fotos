@@ -24,20 +24,21 @@ MAX_TEST_IMAGES = 5
 MAX_INLINE_BYTES = 18 * 1024 * 1024  # margem abaixo do limite oficial de 20 MB
 SUPPORTED_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp"}
 
-PROMPT = """Perform a conservative restoration and colorization of this exact scanned school composite. This is a restoration task, not a recreation. The input image is the sole source of truth.
+PROMPT = """Restore and fully colorize this entire scanned 1994 school composite.
 
-Allowed changes only:
-- reduce dust, scratches, stains, fading, uneven exposure, excessive grain, xerographic noise, and scanning artifacts;
-- make modest global improvements to contrast and sharpness;
-- add subtle, historically plausible color to regions that already exist.
+Two requirements are equally important:
 
-Identity preservation is the highest priority. Keep every person's face, facial geometry, expression, gaze, skin texture, hair, ears, neck, clothing, pose, and body proportions exactly as shown. Do not beautify, retouch, symmetrize, redraw, replace, or reinterpret any person. Do not reconstruct details that are absent or uncertain. If a feature is blurry, damaged, overexposed, hidden, or ambiguous, leave it blurry or ambiguous rather than guessing.
+1. COMPLETE COLORIZATION
+Colorize every portrait on the page, including every person's skin, lips, eyes, hair, and clothing, as well as each portrait background. No person or portrait may remain black-and-white, grayscale, monochrome, or sepia. Use natural skin tones and restrained, realistic, historically plausible colors. When the original color is unknown, choose a plausible color consistently; color uncertainty is not a reason to leave an area uncolored. Keep the paper, printed grid, and text neutral unless a faint natural paper tone is appropriate.
 
-Absolutely do not add face masks, surgical masks, respirators, bandages, glasses, facial hair, jewelry, hats, accessories, logos, or any other object unless that same object is clearly and unambiguously present in the input. Xerox marks, shadows, stains, pale areas, and lines across a face are damage or uncertainty; they must never be interpreted as masks or objects.
+2. CONTENT AND IDENTITY PRESERVATION
+Use the input as the sole source for shapes and content. Preserve each person's identity, facial geometry, expression, gaze, hairstyle, clothing shape, pose, and proportions. Preserve the sheet layout, crop, portrait positions, borders, numbers, labels, handwriting, and typography. Do not beautify or redesign faces. If a facial detail is unclear, keep its shape soft rather than inventing a sharper feature.
 
-Preserve the complete sheet layout, crop, borders, portrait positions, printed numbers, labels, handwriting, and typography. Do not rewrite, correct, replace, or invent illegible text. Do not remove legitimate objects. Do not modernize clothing, hairstyles, photographic style, or historical context. Colorization must not alter shapes, edges, or content.
+Remove or reduce scratches, dust, stains, fading, uneven exposure, xerographic noise, excessive grain, and scanning artifacts. Improve contrast and clarity moderately.
 
-Before returning the image, verify person by person that no object was added and that each identity still matches the input. Return exactly one restored image with the same composition, without captions, new borders, or explanatory text."""
+Do not add or reinterpret objects. In particular, never add face masks, surgical masks, respirators, bandages, glasses, facial hair, jewelry, hats, accessories, logos, or modern items unless clearly present in the input. Do not interpret xerox marks, shadows, pale patches, stains, or lines across a face as an object. Do not rewrite illegible text or modernize the scene.
+
+Return exactly one restored image with the same composition. Before returning it, verify that every portrait is colorized and that no person has gained a mask or any other new object."""
 
 
 def parser() -> argparse.ArgumentParser:
