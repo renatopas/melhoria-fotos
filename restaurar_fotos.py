@@ -23,7 +23,7 @@ DEFAULT_MODEL = "gemini-3.1-flash-lite-image"
 MAX_INLINE_BYTES = 18 * 1024 * 1024  # margem abaixo do limite oficial de 20 MB
 SUPPORTED_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp"}
 
-PROMPT = """Create a high-quality, fully colorized restoration of this severely degraded scanned school composite. The restored version will be displayed beside the original and should prioritize visual clarity and photographic quality.
+PROMPT = """Create a high-quality, fully colorized restoration of this severely degraded scanned school composite. Prioritize visual clarity and photographic quality.
 
 Perform an intensive restoration, not simple tinting. Strongly remove xerox noise, grain, dust, stains, fading, blur and scanning artifacts. Correct exposure, contrast and tonal range. Reconstruct plausible natural detail in faces, skin, eyes, hair and clothing wherever degradation has destroyed fine detail. Produce sharp, clean, realistic portraits with natural skin tones, convincing texture and historically plausible colors. Aim for the quality of well-preserved original portrait photographs rather than the appearance of a cleaned photocopy.
 
@@ -31,9 +31,9 @@ Keep each person recognizably the same: retain their basic facial geometry, expr
 
 Treat every text region as part of the original photograph, not as text to transcribe. Do not perform OCR, rewrite, correct, autocomplete or invent letters. Preserve clearly readable text; leave uncertain text visually uncertain.
 
-Before editing, identify and count only the clearly visible original portrait photographs. The output must contain exactly that same number of portraits, in exactly the same cells and positions. Every cell that is empty in the source must remain empty. Do not turn faint show-through, paper shadows or barely visible reversed images into portraits, anywhere on the page. Do not create a new row, move a portrait to another cell or repeat a person or label.
+Before editing, identify and count only the clearly visible original portrait photographs. Restore only those photographs. The output must contain exactly that same number of portraits, in exactly the same cells and positions. Copy the occupancy pattern of the source exactly: every cell that is empty in the source must remain blank paper. Faint show-through, paper shadows, reversed images and barely visible faces are printing artifacts, not people to restore. Do not create, remove, duplicate, move or replace any portrait, row, cell, person or label.
 
-Return one polished restored image with the same page composition."""
+Return only one polished restored page. Do not create a comparison, split view, before-and-after layout, duplicate page or additional panel. The output must have the same single-page composition as the input."""
 
 
 def parser() -> argparse.ArgumentParser:
@@ -230,6 +230,14 @@ def save_comparison(data: bytes, original_path: Path, destination: Path) -> None
     with Image.open(original_path) as original_image, Image.open(io.BytesIO(data)) as improved_image:
         original = ImageOps.exif_transpose(original_image).convert("RGB")
         improved = ImageOps.exif_transpose(improved_image).convert("RGB")
+        original_ratio = original.width / original.height
+        improved_ratio = improved.width / improved.height
+        ratio_change = abs(improved_ratio - original_ratio) / original_ratio
+        if ratio_change > 0.10:
+            raise ValueError(
+                "a resposta alterou a proporção da página "
+                f"({original.width}x{original.height} -> {improved.width}x{improved.height})"
+            )
         if improved.size != original.size:
             improved = improved.resize(original.size, Image.Resampling.LANCZOS)
 
@@ -301,7 +309,11 @@ def collect_job(job_arg: str | None) -> None:
         if not original_path.is_file():
             print(f"ERRO {filename}: original não encontrado", file=sys.stderr)
             continue
-        save_comparison(image_parts[0].inline_data.data, original_path, destination)
+        try:
+            save_comparison(image_parts[0].inline_data.data, original_path, destination)
+        except (OSError, ValueError) as exc:
+            print(f"ERRO {filename}: resultado rejeitado: {exc}", file=sys.stderr)
+            continue
         print(f"SALVO {destination}")
         saved += 1
     record["collected_at"] = datetime.now(timezone.utc).isoformat()
