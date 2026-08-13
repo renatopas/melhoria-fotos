@@ -23,21 +23,13 @@ DEFAULT_MODEL = "gemini-3.1-flash-lite-image"
 MAX_INLINE_BYTES = 18 * 1024 * 1024  # margem abaixo do limite oficial de 20 MB
 SUPPORTED_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp"}
 
-PROMPT = """Restore and fully colorize this entire scanned 1994 school composite.
+PROMPT = """Colorize this entire black-and-white school composite and apply light photographic restoration.
 
-Two requirements are equally important:
+The source image is authoritative. Keep all visible content and geometry unchanged: the same people, faces, expressions, hair, clothing, markings, text, layout, borders, and background. Do not add, remove, replace, redesign, complete, or reinterpret anything. Do not reconstruct missing or unclear details; leave them soft or damaged as in the source.
 
-1. COMPLETE COLORIZATION
-Colorize every portrait on the page, including every person's skin, lips, eyes, hair, and clothing, as well as each portrait background. No person or portrait may remain black-and-white, grayscale, monochrome, or sepia. Use natural skin tones and restrained, realistic, historically plausible colors. When the original color is unknown, choose a plausible color consistently; color uncertainty is not a reason to leave an area uncolored. Keep the paper, printed grid, and text neutral unless a faint natural paper tone is appropriate.
+The only permitted changes are realistic, historically plausible color, gentle noise and stain reduction, and modest correction of exposure and contrast. Apply color throughout every portrait, but change color only—not shapes, edges, textures, or objects. Preserve all readable text exactly and leave unreadable marks unreadable.
 
-2. CONTENT AND IDENTITY PRESERVATION
-Use the input as the sole source for shapes and content. Treat every portrait frame as a separate, independent identity: never transfer or borrow hair, facial features, clothing, colors, or details from a neighboring portrait. Preserve each person's identity, facial geometry, expression, gaze, hairstyle, clothing, pose, and proportions. For every hairstyle, preserve the exact outer silhouette, hairline, parting, length, volume, smoothness, and direction in which the hair is combed. Hair may receive color only inside the region occupied by hair in the source. Never expand hair into pixels that belong to the portrait background, forehead, face, ears, neck, shoulders, or clothing; never make short hair longer or extend it toward the shoulders. Color the existing hair without restyling it. Do not add individual strands, spikes, extra volume, curls, bangs, or a punk/spiky appearance that is not clearly visible in the input. Xerox grain and edge noise around the head are not hair. If a hair boundary is unclear, preserve the smaller, simpler source silhouette rather than enlarging or reconstructing it. Preserve every garment's exact type, neckline, collar, sleeves, cut, pattern, and visible markings. Printed words, letters, numbers, symbols, emblems, and graphics on clothing are part of the original photograph and must remain in the same position, size, shape, spelling, and contrast; do not erase, cover, simplify, translate, correct, redesign, or replace them. Preserve legible garment text exactly. If a marking is illegible, preserve its original visual shapes without trying to turn it into new readable text. Preserve the sheet layout, crop, portrait positions, borders, numbers, labels, handwriting, and typography. Do not beautify or redesign faces. If a facial detail is unclear, keep its shape soft rather than inventing a sharper feature.
-
-Remove or reduce scratches, dust, stains, fading, uneven exposure, xerographic noise, excessive grain, and scanning artifacts. Improve contrast and clarity moderately.
-
-Do not add or reinterpret any object, accessory, garment detail, or modern element. Reproduce the area from each person's nose through mouth and chin using only the facial anatomy and tones supported by the source. Keep the nose, mouth, chin, cheeks, and jaw visually unobstructed wherever they are visible in the input. Pale patches, white circles, shadows, stains, lines, and missing xerographic information across a face are flat print or paper damage, never a three-dimensional or wearable item. Reduce such damage conservatively; where facial information is missing, use a soft continuation of nearby facial tone without adding seams, folds, straps, hard edges, or a recognizable object. Do not rewrite illegible text or modernize the scene.
-
-Return exactly one restored image with the same composition. Before returning it, verify that every portrait is colorized, that visible noses, mouths, and chins remain unobstructed, and that no new object appears on any person."""
+Return one image with exactly the same composition and content as the source."""
 
 
 def parser() -> argparse.ArgumentParser:
