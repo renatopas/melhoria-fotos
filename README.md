@@ -45,6 +45,8 @@ Se o ID for omitido, o registro pendente mais recente em `.batch_jobs/` será us
 python3 restaurar_fotos.py collect
 ```
 
-Os resultados são gravados em `fotos/melhorada/`, com os nomes originais. Fotos cujo nome já exista no destino são removidas da seleção antes da aplicação de `--limit`; portanto, não são reenviadas nem contam no limite. Arquivos existentes nunca são sobrescritos.
+Os resultados são gravados em `fotos/melhorada/`, com os nomes originais. Cada arquivo final é uma composição com o original à esquerda e a versão restaurada à direita, identificada discretamente como `Imagem colorizada por IA`. A montagem e a legenda são produzidas localmente, sem uma chamada adicional à API.
+
+Fotos cujo nome já exista no destino são removidas da seleção antes da aplicação de `--limit`; portanto, não são reenviadas nem contam no limite. Arquivos existentes nunca são sobrescritos.
 
 O processamento completo exige `--all`, `--confirm-paid` e a confirmação adicional mostrada pela ajuda do programa. Não o execute sem autorização explícita.

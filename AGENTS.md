@@ -12,7 +12,7 @@ Leia `inicia.md` antes de alterar ou executar o projeto.
 - Para validar o script, processe inicialmente somente uma imagem.
 - Peça confirmação antes de qualquer processamento pago. O usuário pode escolher lotes graduais de qualquer quantidade positiva com `--limit`.
 - Peça confirmação explícita antes de processar o conjunto completo.
-- Não sobrescreva os arquivos originais. Grave resultados em um subdiretório dedicado, como `fotos/melhorada/`.
+- Não sobrescreva os arquivos originais. Grave em `fotos/melhorada/` uma composição com original à esquerda e restauração à direita, identificada como imagem colorizada por IA.
 - Em caso de ambiguidade que possa afetar custo, fidelidade ou arquivos originais, interrompa e pergunte.
 
 ## Desenvolvimento

@@ -217,19 +217,47 @@ def load_record(job_arg: str | None) -> tuple[Path, dict]:
     raise SystemExit(f"Registro do job não encontrado para: {job_arg}")
 
 
-def save_image(data: bytes, destination: Path) -> None:
+def save_comparison(data: bytes, original_path: Path, destination: Path) -> None:
     try:
-        from PIL import Image
+        from PIL import Image, ImageDraw, ImageFont, ImageOps
     except ImportError as exc:
         raise SystemExit("Dependências ausentes. Execute: pip install -r requirements.txt") from exc
+
+    label = "Imagem colorizada por IA"
     destination.parent.mkdir(parents=True, exist_ok=True)
-    with Image.open(io.BytesIO(data)) as image:
+    with Image.open(original_path) as original_image, Image.open(io.BytesIO(data)) as improved_image:
+        original = ImageOps.exif_transpose(original_image).convert("RGB")
+        improved = ImageOps.exif_transpose(improved_image).convert("RGB")
+        if improved.size != original.size:
+            improved = improved.resize(original.size, Image.Resampling.LANCZOS)
+
+        width, height = original.size
+        footer_height = max(36, round(height * 0.035))
+        separator_width = max(2, round(width * 0.002))
+        canvas = Image.new("RGB", (width * 2 + separator_width, height + footer_height), "white")
+        canvas.paste(original, (0, 0))
+        canvas.paste(improved, (width + separator_width, 0))
+
+        draw = ImageDraw.Draw(canvas)
+        draw.rectangle((width, 0, width + separator_width - 1, height - 1), fill=(205, 205, 205))
+        font_size = max(14, round(footer_height * 0.42))
+        try:
+            font = ImageFont.truetype("DejaVuSans.ttf", font_size)
+        except OSError:
+            font = ImageFont.load_default()
+        box = draw.textbbox((0, 0), label, font=font)
+        text_width = box[2] - box[0]
+        text_height = box[3] - box[1]
+        text_x = width + separator_width + (width - text_width) // 2
+        text_y = height + (footer_height - text_height) // 2 - box[1]
+        draw.text((text_x, text_y), label, fill=(90, 90, 90), font=font)
+
         if destination.suffix.lower() in {".jpg", ".jpeg"}:
-            image.convert("RGB").save(destination, format="JPEG", quality=95)
+            canvas.save(destination, format="JPEG", quality=95, subsampling=0)
         elif destination.suffix.lower() == ".webp":
-            image.save(destination, format="WEBP", quality=95)
+            canvas.save(destination, format="WEBP", quality=95)
         else:
-            image.save(destination, format="PNG")
+            canvas.save(destination, format="PNG")
 
 
 def collect_job(job_arg: str | None) -> None:
@@ -252,6 +280,7 @@ def collect_job(job_arg: str | None) -> None:
     if len(responses) != len(record["files"]):
         raise SystemExit("Quantidade de respostas diferente da quantidade de arquivos; nada foi salvo.")
     output_dir = Path(record["output_dir"])
+    input_dir = Path(record["input_dir"])
     saved = 0
     for filename, inline_response in zip(record["files"], responses, strict=True):
         if inline_response.error:
@@ -266,7 +295,11 @@ def collect_job(job_arg: str | None) -> None:
         if destination.exists():
             print(f"PULADO {filename}: destino já existe", file=sys.stderr)
             continue
-        save_image(image_parts[0].inline_data.data, destination)
+        original_path = input_dir / filename
+        if not original_path.is_file():
+            print(f"ERRO {filename}: original não encontrado", file=sys.stderr)
+            continue
+        save_comparison(image_parts[0].inline_data.data, original_path, destination)
         print(f"SALVO {destination}")
         saved += 1
     record["collected_at"] = datetime.now(timezone.utc).isoformat()
