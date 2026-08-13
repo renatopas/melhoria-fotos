@@ -41,36 +41,20 @@ Garantir que as fotos sejam apenas melhoradas, com colorização e redução de 
 Segue sugestão de prompt:
 
 ```
-Restore this old black-and-white photograph while preserving
-the original photographic content as faithfully as possible.
+Perform a conservative restoration and colorization of this exact scanned school composite. This is a restoration task, not a recreation. The input image is the sole source of truth.
 
-Correct:
-- scratches
-- dust
-- stains
-- fading
-- uneven exposure
-- contrast problems
-- minor blur
-- film grain and scanning artifacts
+Allowed changes only:
+- reduce dust, scratches, stains, fading, uneven exposure, excessive grain, xerographic noise, and scanning artifacts;
+- make modest global improvements to contrast and sharpness;
+- add subtle, historically plausible color to regions that already exist.
 
-Improve facial clarity and fine details conservatively.
+Identity preservation is the highest priority. Keep every person's face, facial geometry, expression, gaze, skin texture, hair, ears, neck, clothing, pose, and body proportions exactly as shown. Do not beautify, retouch, symmetrize, redraw, replace, or reinterpret any person. Do not reconstruct details that are absent or uncertain. If a feature is blurry, damaged, overexposed, hidden, or ambiguous, leave it blurry or ambiguous rather than guessing.
 
-Do NOT:
-- change facial features
-- change expressions
-- change hairstyle
-- change clothing
-- add objects
-- remove legitimate objects
-- invent missing facial details
-- change body proportions
-- modernize the scene
+Absolutely do not add face masks, surgical masks, respirators, bandages, glasses, facial hair, jewelry, hats, accessories, logos, or any other object unless that same object is clearly and unambiguously present in the input. Xerox marks, shadows, stains, pale areas, and lines across a face are damage or uncertainty; they must never be interpreted as masks or objects.
 
-Apply realistic, historically plausible colorization conservatively.
+Preserve the complete sheet layout, crop, borders, portrait positions, printed numbers, labels, handwriting, and typography. Do not rewrite, correct, replace, or invent illegible text. Do not remove legitimate objects. Do not modernize clothing, hairstyles, photographic style, or historical context. Colorization must not alter shapes, edges, or content.
 
-The result should look like a professionally restored version
-of the original photograph, not like an AI-generated recreation.
+Before returning the image, verify person by person that no object was added and that each identity still matches the input. Return exactly one restored image with the same composition, without captions, new borders, or explanatory text.
 
 ```
 
