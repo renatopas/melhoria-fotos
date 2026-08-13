@@ -29,7 +29,7 @@ Substantially improve photographic quality: remove xerox and scanning noise, dus
 
 Preserve the source exactly as to identity and structure. Keep each face, expression, hairstyle, garment, printed marking, portrait boundary, text and page layout unchanged. Restoration may clarify existing features, but must not redesign shapes, invent missing detail or add content. Preserve readable text and existing clothing graphics. Keep genuinely uncertain areas soft.
 
-Treat very faint ghost images or show-through outside the bordered portrait cells as paper/scanning artifacts; remove them rather than developing them into people or objects.
+Before editing, identify and count only the clearly visible original portrait photographs. The output must contain exactly that same number of portraits, in exactly the same cells and positions. Every cell that is empty in the source must remain empty. Do not turn faint show-through, paper shadows or barely visible reversed images into portraits, anywhere on the page. Do not create a new row, move a portrait to another cell or repeat a person or label.
 
 Return one restored image with the same composition."""
 
