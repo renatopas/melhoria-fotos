@@ -53,9 +53,9 @@ Use the input as the sole source for shapes and content. Preserve each person's 
 
 Remove or reduce scratches, dust, stains, fading, uneven exposure, xerographic noise, excessive grain, and scanning artifacts. Improve contrast and clarity moderately.
 
-Do not add or reinterpret objects. In particular, never add face masks, surgical masks, respirators, bandages, glasses, facial hair, jewelry, hats, accessories, logos, or modern items unless clearly present in the input. Do not interpret xerox marks, shadows, pale patches, stains, or lines across a face as an object. Do not rewrite illegible text or modernize the scene.
+Do not add or reinterpret any object, accessory, garment detail, or modern element. Reproduce the area from each person's nose through mouth and chin using only the facial anatomy and tones supported by the source. Keep the nose, mouth, chin, cheeks, and jaw visually unobstructed wherever they are visible in the input. Pale patches, white circles, shadows, stains, lines, and missing xerographic information across a face are flat print or paper damage, never a three-dimensional or wearable item. Reduce such damage conservatively; where facial information is missing, use a soft continuation of nearby facial tone without adding seams, folds, straps, hard edges, or a recognizable object. Do not rewrite illegible text or modernize the scene.
 
-Return exactly one restored image with the same composition. Before returning it, verify that every portrait is colorized and that no person has gained a mask or any other new object.
+Return exactly one restored image with the same composition. Before returning it, verify that every portrait is colorized, that visible noses, mouths, and chins remain unobstructed, and that no new object appears on any person.
 
 ```
 
