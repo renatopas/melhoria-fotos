@@ -1,0 +1,37 @@
+# Fotografias de entrada, descarte e resultados gerados
+/fotos/
+/foto/
+
+# Credenciais e configuração local
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage.xml
+.coverage
+htmlcov/
+
+# Artefatos locais
+*.log
+tmp/
+temp/
+
+# Editores e sistema operacional
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Estado local de agentes e ferramentas
+/.agents/
+/.codex/
