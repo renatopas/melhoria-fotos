@@ -23,15 +23,17 @@ DEFAULT_MODEL = "gemini-3.1-flash-lite-image"
 MAX_INLINE_BYTES = 18 * 1024 * 1024  # margem abaixo do limite oficial de 20 MB
 SUPPORTED_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp"}
 
-PROMPT = """Professionally restore and fully colorize this scanned school composite.
+PROMPT = """Create a high-quality, fully colorized restoration of this severely degraded scanned school composite. The restored version will be displayed beside the original and should prioritize visual clarity and photographic quality.
 
-Substantially improve photographic quality: remove xerox and scanning noise, dust, stains and grain; correct fading, exposure and contrast; reduce minor blur; and recover natural facial and clothing detail where that detail is supported by visible evidence in the source. Produce clear, realistic portraits rather than merely tinting the scan. Use natural, historically plausible color throughout every portrait.
+Perform an intensive restoration, not simple tinting. Strongly remove xerox noise, grain, dust, stains, fading, blur and scanning artifacts. Correct exposure, contrast and tonal range. Reconstruct plausible natural detail in faces, skin, eyes, hair and clothing wherever degradation has destroyed fine detail. Produce sharp, clean, realistic portraits with natural skin tones, convincing texture and historically plausible colors. Aim for the quality of well-preserved original portrait photographs rather than the appearance of a cleaned photocopy.
 
-Preserve the source exactly as to identity and structure. Keep each face, expression, hairstyle, garment, printed marking, portrait boundary, text and page layout unchanged. Restoration may clarify existing features, but must not redesign shapes, invent missing detail or add content. Treat every text region as part of the original photograph, not as text to transcribe or typeset. Do not perform OCR, rewrite, correct, autocomplete, translate, sharpen into different letters or replace the original lettering. Preserve clearly readable text exactly. Whenever a letter, word or label cannot be read with high confidence, preserve its original marks, spacing, defects and degree of illegibility instead of guessing. Keep genuinely uncertain areas soft.
+Keep each person recognizably the same: retain their basic facial geometry, expression, pose, hairstyle type and clothing type. Do not beautify, modernize or deliberately change identity. Reasonable AI reconstruction of lost fine detail is allowed, but it must remain consistent with the visible evidence.
+
+Treat every text region as part of the original photograph, not as text to transcribe. Do not perform OCR, rewrite, correct, autocomplete or invent letters. Preserve clearly readable text; leave uncertain text visually uncertain.
 
 Before editing, identify and count only the clearly visible original portrait photographs. The output must contain exactly that same number of portraits, in exactly the same cells and positions. Every cell that is empty in the source must remain empty. Do not turn faint show-through, paper shadows or barely visible reversed images into portraits, anywhere on the page. Do not create a new row, move a portrait to another cell or repeat a person or label.
 
-Return one restored image with the same composition."""
+Return one polished restored image with the same page composition."""
 
 
 def parser() -> argparse.ArgumentParser:
