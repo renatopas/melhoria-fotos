@@ -25,6 +25,7 @@ htmlcov/
 *.log
 tmp/
 temp/
+/.batch_jobs/
 
 # Editores e sistema operacional
 .idea/
