@@ -1,6 +1,6 @@
 # Orientações do projeto
 
-Leia `inicia.md` antes de alterar ou executar o projeto.
+Leia `REQUIREMENTS.md` antes de alterar ou executar o projeto.
 
 ## Regras obrigatórias
 

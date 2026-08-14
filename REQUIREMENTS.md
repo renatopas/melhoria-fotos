@@ -1,4 +1,6 @@
-Projeto de melhoria de foto tipo "carômetro" do site etfsp
+# Requisitos do projeto
+
+Projeto de melhoria de foto tipo "carômetro" do site ETFSP.
 
 ## Objetivo
 
